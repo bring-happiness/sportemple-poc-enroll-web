@@ -6,65 +6,42 @@
       dark
     >
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
 
-        C.S Clichy
-      </div>
+        <a class="white--text club-link" href="http://www.csclichytennis.com/">
+          <v-icon class="mr-1">mdi-arrow-left</v-icon>
+          Site du club
+        </a>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-          @click="goToAdmin"
-        text
-      >
-        <span class="mr-2">
-          <span v-if="!admin">Admin</span>
-          <span v-else>Inscription</span>
-
+        <span class="club-title ml-5">
+          C.S Clichy tennis - Inscription
         </span>
-      </v-btn>
+      </div>
     </v-app-bar>
 
     <v-main>
-      <HelloWorld
-          v-if="!admin"
-      />
-
-      <Admin
-        v-else
-      ></Admin>
+      <router-view/>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
-import Admin from './components/Admin';
 
 export default Vue.extend({
-  name: 'App',
-
-  components: {
-    HelloWorld,
-    Admin
-  },
-
-  data: () => ({
-    admin: false,
-  }),
-
-  methods: {
-    goToAdmin() {
-      this.admin = !this.admin;
-    }
-  }
+  name: 'app',
 });
 </script>
+
+<style scoped>
+  .club-link {
+    text-decoration: none;
+  }
+
+  .club-link:hover {
+    opacity: 0.6;
+  }
+
+  .club-title {
+    font-size: 1.5rem;
+  }
+</style>
