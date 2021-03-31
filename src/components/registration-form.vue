@@ -322,7 +322,7 @@
 <script lang="ts">
 import axios from 'axios';
 import Vue from 'vue';
-import WebCam from './WebCam.vue';
+import WebCam from './web-cam.vue';
 
 import { loadStripe } from '@stripe/stripe-js';
 

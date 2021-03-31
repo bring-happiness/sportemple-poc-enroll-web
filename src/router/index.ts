@@ -7,12 +7,22 @@ const routes: Array<RouteConfig> = [
   {
     path: '/',
     name: 'index',
-    redirect: '/registration'
+    redirect: '/registration/items'
   },
   {
-    path: '/registration',
-    name: 'registration',
-    component: () => import(/* webpackChunkName: "registration" */ '../views/registration.vue')
+    path: '/registration/items',
+    name: 'registration-items',
+    component: () => import(/* webpackChunkName: "registration-items" */ '../views/registration-items')
+  },
+  {
+    path: '/registration/form',
+    name: 'registration-form',
+    component: () => import(/* webpackChunkName: "registration-form" */ '../views/registration-form.vue')
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: () => import(/* webpackChunkName: "admin" */ '../views/admin')
   },
 ]
 

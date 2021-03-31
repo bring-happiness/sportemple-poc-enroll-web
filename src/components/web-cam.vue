@@ -2,11 +2,6 @@
   <div>
     <video id="webcam" autoplay playsinline width="450" height="380"></video>
     <canvas id="canvas" class="d-none"></canvas>
-
-    <v-btn @click="takeSnapshot">Prendre une photo</v-btn>
-    <v-btn @click="flip">Passer à l'autre caméra</v-btn>
-
-    <a :href="pictureHref">aa</a>
   </div>
 </template>
 
@@ -15,7 +10,7 @@ import Vue from 'vue';
 import Webcam from 'webcam-easy'
 
 export default Vue.extend({
-  name: 'WebCam',
+  name: 'web-cam',
   mounted() {
     const webcamElement = document.getElementById('webcam');
     const canvasElement = document.getElementById('canvas');
@@ -33,13 +28,13 @@ export default Vue.extend({
 
   data: () => {
     return {
-      webcam: null,
-      pictureHref: null
+      webcam: null
     }
   },
   methods: {
-    takeSnapshot() {
-      this.pictureHref = this.webcam.snap();
+    snap() {
+      const pictureHref = this.webcam.snap();
+      this.$emit('new-picture', pictureHref);
     },
     flip() {
       this.webcam.flip();

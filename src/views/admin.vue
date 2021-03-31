@@ -45,6 +45,8 @@
         </v-chip>
       </template>
 
+
+
       <template v-slot:item._actions="{ item }">
         <v-speed-dial
             direction="right"
@@ -87,8 +89,22 @@
         </v-speed-dial>
       </template>
 
+      <template v-slot:item.stripeSession="{ item }">
+
+        <v-chip
+            :color="getPaymentStatusColor(item.stripeSession ? item.stripeSession.payment_status : '')"
+            dark
+        >
+          {{ item.stripeSession ? getPaymentStatus(item.stripeSession.payment_status) : '' }}
+          {{ item.stripeSession ? getAmountTotal(item.stripeSession.amount_total) : '' }}
+          {{ item.stripeSession ? getCurrency(item.stripeSession.currency) : '' }}
+        </v-chip>
+
+      </template>
+
       <template v-slot:item.studientCheckFilePath="{ item }">
         <a
+            v-if="item.studientCheckFilePath !== null"
             :href="'http://localhost:3001/' + item.studientCheckFilePath"
             target="_blank"
             class="file-preview"
@@ -99,9 +115,10 @@
 
       <template v-slot:item.proofResidenceFilPath="{ item }">
         <a
-          :href="'http://localhost:3001/' + item.proofResidenceFilPath"
-          target="_blank"
-          class="file-preview"
+            v-if="item.proofResidenceFilPath !== null"
+            :href="'http://localhost:3001/' + item.proofResidenceFilPath"
+            target="_blank"
+            class="file-preview"
         >
           <img :src="'http://localhost:3001/' + item.proofResidenceFilPath">
         </a>
@@ -109,9 +126,10 @@
 
       <template v-slot:item.medicalCertificateFilePath="{ item }">
         <a
-          :href="'http://localhost:3001/' + item.medicalCertificateFilePath"
-          target="_blank"
-          class="file-preview"
+            v-if="item.medicalCertificateFilePath !== null"
+            :href="'http://localhost:3001/' + item.medicalCertificateFilePath"
+            target="_blank"
+            class="file-preview"
         >
           <img :src="'http://localhost:3001/' + item.medicalCertificateFilePath">
         </a>
@@ -134,25 +152,25 @@ export default {
       dialogChecklist: false,
       registrationFabIdOpen: -1,
       headers: [
-        { text: 'Statut', value: '_status',},
-        { text: 'Actions', value: '_actions' },
-        { text: 'Civilité', value: 'civility',},
-        { text: 'Nom', value: 'lastname' },
-        { text: 'Prénom', value: 'firstname' },
-        { text: 'Date de naissance', value: 'dateOfBirth' },
-        { text: 'Nationalité', value: 'nationality' },
-        { text: 'Adresse', value: 'postalAddress' },
-        { text: 'Code postal', value: 'postalCode' },
-        { text: 'Ville', value: 'city' },
-        { text: 'Pays', value: 'country' },
-        { text: 'Téléphone', value: 'phone' },
-        { text: 'Email', value: 'email' },
-        { text: 'Déjà licencié ?', value: 'alreadyLicenced' },
-        { text: 'Consentement', value: '_allowed' },
-        { text: 'Justicatif étudiant', value: 'studientCheckFilePath' },
-        { text: 'Justicatif domicile', value: 'proofResidenceFilPath' },
-        { text: 'Certificat médical', value: 'medicalCertificateFilePath' },
-        { text: 'Paiement', value: '_payment' },
+        {text: 'Dossier', value: '_status',},
+        {text: 'Actions', value: '_actions'},
+        {text: 'Paiement', value: 'stripeSession'},
+        {text: 'Civilité', value: 'civility',},
+        {text: 'Nom', value: 'lastname'},
+        {text: 'Prénom', value: 'firstname'},
+        {text: 'Date de naissance', value: 'dateOfBirth'},
+        {text: 'Nationalité', value: 'nationality'},
+        {text: 'Adresse', value: 'postalAddress'},
+        {text: 'Code postal', value: 'postalCode'},
+        {text: 'Ville', value: 'city'},
+        {text: 'Pays', value: 'country'},
+        {text: 'Téléphone', value: 'phone'},
+        {text: 'Email', value: 'email'},
+        {text: 'Déjà licencié ?', value: 'alreadyLicenced'},
+        {text: 'Consentement', value: '_allowed'},
+        {text: 'Justicatif étudiant', value: 'studientCheckFilePath'},
+        {text: 'Justicatif domicile', value: 'proofResidenceFilPath'},
+        {text: 'Certificat médical', value: 'medicalCertificateFilePath'},
       ],
       registrations: []
     }
@@ -160,12 +178,40 @@ export default {
   methods: {
     async getAllRegistrations() {
       this.registrations = (await axios.get('http://localhost:3001/center/registration')).data
+
+      for (let i = 0; i < this.registrations.length; i++) {
+        const registration = this.registrations[i];
+        const stripeSessionId = registration.stripeSessionId;
+
+        const stripeSession = (await axios
+            .get(`http://localhost:3001/center/registration/payment-status/${stripeSessionId}`, {
+            })).data;
+
+        this.$set(registration, 'stripeSession', stripeSession);
+      }
     },
     isActionButtonsOpen(item) {
       return item._id === this.registrationFabIdOpen;
     },
     openActionButtons(item) {
       this.registrationFabIdOpen = item._id
+    },
+    getPaymentStatus(paymentStatus) {
+      if(paymentStatus === 'paid') return 'Payé'
+      if(paymentStatus === 'unpaid') return 'Impayé'
+      else return paymentStatus
+    },
+    getPaymentStatusColor(paymentStatus) {
+      if(paymentStatus === 'paid') return 'success'
+      if(paymentStatus === 'unpaid') return 'error'
+      else return 'grey'
+    },
+    getAmountTotal(amountTotal) {
+      return amountTotal / 100;
+    },
+    getCurrency(currency) {
+      if (currency === 'eur') return '€'
+      else return '$'
     },
     getRegistrationStatusLabel(status) {
       if (status === 'INIT') return 'À valider'
@@ -180,7 +226,7 @@ export default {
       else if (status === 'NEED_CHANGE') return 'Attente modif'
     },
     async acceptRegistration(registration) {
-      this.dialogChecklist = true;
+      // this.dialogChecklist = true;
 
       await axios.post('http://localhost:3001/center/registration/status', {
         id: registration._id,
@@ -190,7 +236,7 @@ export default {
       await this.getAllRegistrations();
     },
     async refuseRegistration(registration) {
-      this.dialogChecklist = true;
+      // this.dialogChecklist = true;
 
       await axios.post('http://localhost:3001/center/registration/status', {
         id: registration._id,
@@ -204,8 +250,8 @@ export default {
 </script>
 
 <style scoped>
-  .file-preview img {
-    max-width: 100%;
-    max-height: 100%;
-  }
+.file-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
 </style>
