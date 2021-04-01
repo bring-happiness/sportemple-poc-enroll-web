@@ -179,16 +179,22 @@ export default {
     async getAllRegistrations() {
       this.registrations = (await axios.get('http://localhost:3001/center/registration')).data
 
+      const promises = [];
+
       for (let i = 0; i < this.registrations.length; i++) {
         const registration = this.registrations[i];
         const stripeSessionId = registration.stripeSessionId;
 
-        const stripeSession = (await axios
-            .get(`http://localhost:3001/center/registration/payment-status/${stripeSessionId}`, {
-            })).data;
-
-        this.$set(registration, 'stripeSession', stripeSession);
+        const promise = axios.get(`http://localhost:3001/center/registration/payment-status/${stripeSessionId}`, {
+            });
+        promises.push(promise);
       }
+
+      Promise.all(promises).then((checkouts) => {
+        checkouts.forEach((checkout, index) => {
+          this.$set(this.registrations[index], 'stripeSession', checkout.data);
+        })
+      })
     },
     isActionButtonsOpen(item) {
       return item._id === this.registrationFabIdOpen;
