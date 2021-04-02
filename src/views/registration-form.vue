@@ -780,7 +780,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
+// @ts-ignore
 import TennisPlayerMale from './../components/icons/tennis-player-male'
+// @ts-ignore
 import TennisPlayerFemale from './../components/icons/tennis-player-female'
 import axios from "axios";
 import {loadStripe} from "@stripe/stripe-js";
