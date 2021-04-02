@@ -12,8 +12,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/registration/items',
     name: 'registration-items',
-    // @ts-ignore
-    component: () => import(/* webpackChunkName: "registration-items" */ '../views/registration-items')
+    component: () => import(/* webpackChunkName: "registration-items" */ '../views/registration-items.vue')
   },
   {
     path: '/registration/form',
@@ -29,8 +28,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/admin',
     name: 'admin',
-    // @ts-ignore
-    component: () => import(/* webpackChunkName: "admin" */ '../views/admin')
+    component: () => import(/* webpackChunkName: "admin" */ '../views/admin.vue')
   },
 ]
 
