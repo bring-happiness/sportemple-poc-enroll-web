@@ -1048,6 +1048,7 @@ export default Vue.extend({
           sessionId: registration.stripeSessionId
         });
       } catch (e) {
+        //
       }
 
       this.isLoadingGoPay = false;
