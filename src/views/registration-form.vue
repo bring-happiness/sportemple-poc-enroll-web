@@ -1006,46 +1006,49 @@ export default Vue.extend({
     async goPay() {
       this.isLoadingGoPay = true;
 
-      const formData = new FormData();
+      try {
+        const formData = new FormData();
 
-      formData.append('civility', this.civilityGroup);
-      formData.append('lastname', this.lastname);
-      formData.append('firstname', this.firstname);
-      formData.append('dateOfBirth', this.dateOfBirth);
-      formData.append('nationality', this.nationality);
-      formData.append('postalAddress', this.postalAddress);
-      formData.append('postalCode', this.postalCode);
-      formData.append('city', this.city);
+        formData.append('civility', this.civilityGroup);
+        formData.append('lastname', this.lastname);
+        formData.append('firstname', this.firstname);
+        formData.append('dateOfBirth', this.dateOfBirth);
+        formData.append('nationality', this.nationality);
+        formData.append('postalAddress', this.postalAddress);
+        formData.append('postalCode', this.postalCode);
+        formData.append('city', this.city);
 
-      formData.append('phone', this.phone);
-      formData.append('informationsSmsAllowed', this.informationsSmsAllowed);
+        formData.append('phone', this.phone);
+        formData.append('informationsSmsAllowed', this.informationsSmsAllowed);
 
-      formData.append('email', this.email);
-      formData.append('informationsEmailAllowed', this.informationsEmailAllowed);
+        formData.append('email', this.email);
+        formData.append('informationsEmailAllowed', this.informationsEmailAllowed);
 
-      formData.append('pictureAllowed', this.pictureAllowed);
-      formData.append('partnersAllowed', this.partnersAllowed);
-      formData.append('bookingConfirmAllowed', this.bookingConfirmAllowed);
-      formData.append('pass92Allowed', this.pass92Allowed);
-      formData.append('proofPaymentAllowed', this.proofPaymentAllowed);
-      formData.append('alreadyLicenced', this.alreadyLicenced);
-      formData.append('lisence', this.lisence);
-      formData.append('sportYear', this.sportYear);
-      formData.append('clubLisenced', this.clubLisenced);
+        formData.append('pictureAllowed', this.pictureAllowed);
+        formData.append('partnersAllowed', this.partnersAllowed);
+        formData.append('bookingConfirmAllowed', this.bookingConfirmAllowed);
+        formData.append('pass92Allowed', this.pass92Allowed);
+        formData.append('proofPaymentAllowed', this.proofPaymentAllowed);
+        formData.append('alreadyLicenced', this.alreadyLicenced);
+        formData.append('lisence', this.lisence);
+        formData.append('sportYear', this.sportYear);
+        formData.append('clubLisenced', this.clubLisenced);
 
-      formData.append('isStudent', this.isStudent);
-      formData.append('studentFile', this.studentFile);
+        formData.append('isStudent', this.isStudent);
+        formData.append('studentFile', this.studentFile);
 
-      formData.append('proofResidence', this.proofResidence);
-      formData.append('medicalCertificate', this.medicalCertificate);
+        formData.append('proofResidence', this.proofResidence);
+        formData.append('medicalCertificate', this.medicalCertificate);
 
-      const registration = (await axios.post(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration`, formData)).data;
+        const registration = (await axios.post(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration`, formData)).data;
 
-      const stripe = await loadStripe('pk_test_51IaJpyJBgPLSInDKWuAF12GVj5wlIGLypDG6HbN2XDWvlS5g2n9F2mIaZ0v1WB8RtPnYZYkhaY0ZdLq7vkeGgme300wELrLqus');
+        const stripe = await loadStripe('pk_test_51IaJpyJBgPLSInDKWuAF12GVj5wlIGLypDG6HbN2XDWvlS5g2n9F2mIaZ0v1WB8RtPnYZYkhaY0ZdLq7vkeGgme300wELrLqus');
 
-      await stripe.redirectToCheckout({
-        sessionId: registration.stripeSessionId
-      });
+        await stripe.redirectToCheckout({
+          sessionId: registration.stripeSessionId
+        });
+      } catch (e) {
+      }
 
       this.isLoadingGoPay = false;
     }
