@@ -105,33 +105,33 @@
       <template v-slot:item.studientCheckFilePath="{ item }">
         <a
             v-if="item.studientCheckFilePath !== null"
-            :href="'http://localhost:3001/' + item.studientCheckFilePath"
+            :href="`${filePrefix}` + item.studientCheckFilePath"
             target="_blank"
             class="file-preview"
         >
-          <img :src="'http://localhost:3001/' + item.studientCheckFilePath">
+          <img :src="`${filePrefix}` + item.studientCheckFilePath">
         </a>
       </template>
 
       <template v-slot:item.proofResidenceFilPath="{ item }">
         <a
             v-if="item.proofResidenceFilPath !== null"
-            :href="'http://localhost:3001/' + item.proofResidenceFilPath"
+            :href="`${filePrefix}` + item.proofResidenceFilPath"
             target="_blank"
             class="file-preview"
         >
-          <img :src="'http://localhost:3001/' + item.proofResidenceFilPath">
+          <img :src="`${filePrefix}` + item.proofResidenceFilPath">
         </a>
       </template>
 
       <template v-slot:item.medicalCertificateFilePath="{ item }">
         <a
             v-if="item.medicalCertificateFilePath !== null"
-            :href="'http://localhost:3001/' + item.medicalCertificateFilePath"
+            :href="`${filePrefix}` + item.medicalCertificateFilePath"
             target="_blank"
             class="file-preview"
         >
-          <img :src="'http://localhost:3001/' + item.medicalCertificateFilePath">
+          <img :src="`${filePrefix}` + item.medicalCertificateFilePath">
         </a>
       </template>
 
@@ -149,6 +149,7 @@ export default {
   },
   data() {
     return {
+      filePrefix: process.env.VUE_APP_SPORTEMPLE_ENROLL_API + '/',
       dialogChecklist: false,
       registrationFabIdOpen: -1,
       headers: [
@@ -177,7 +178,7 @@ export default {
   },
   methods: {
     async getAllRegistrations() {
-      this.registrations = (await axios.get('http://localhost:3001/center/registration')).data
+      this.registrations = (await axios.get(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration`)).data
 
       const promises = [];
 
@@ -185,7 +186,7 @@ export default {
         const registration = this.registrations[i];
         const stripeSessionId = registration.stripeSessionId;
 
-        const promise = axios.get(`http://localhost:3001/center/registration/payment-status/${stripeSessionId}`, {
+        const promise = axios.get(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration/payment-status/${stripeSessionId}`, {
             });
         promises.push(promise);
       }
@@ -234,7 +235,7 @@ export default {
     async acceptRegistration(registration) {
       // this.dialogChecklist = true;
 
-      await axios.post('http://localhost:3001/center/registration/status', {
+      await axios.post(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration/status`, {
         id: registration._id,
         status: 'OK'
       });
@@ -244,7 +245,7 @@ export default {
     async refuseRegistration(registration) {
       // this.dialogChecklist = true;
 
-      await axios.post('http://localhost:3001/center/registration/status', {
+      await axios.post(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration/status`, {
         id: registration._id,
         status: 'KO'
       });

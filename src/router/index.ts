@@ -20,6 +20,12 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "registration-form" */ '../views/registration-form.vue')
   },
   {
+    path: '/registration/success',
+    name: 'registration-success',
+    component: () => import(/* webpackChunkName: "registration-success" */ '../views/registration-success.vue'),
+    props: route => ({ stripeSessionId: route.query.session_id })
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import(/* webpackChunkName: "admin" */ '../views/admin')

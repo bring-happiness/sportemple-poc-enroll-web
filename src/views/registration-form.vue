@@ -103,7 +103,7 @@
                       v-model="nationality"
                       :rules="nationalityRules"
                       label="Nationalité"
-                      placeholder="Français"
+                      placeholder="Française"
                       outlined
                   ></v-text-field>
 
@@ -709,7 +709,7 @@
                 <v-form
                     ref="form-medical-certificate"
                 >
-                  <div class="my-2">
+                  <div class="mb-2">
                     Certificat médical de <u>moins de 3 mois</u>.
                     <br>
                     Il doit préciser la pratique du sport en compétition
@@ -797,7 +797,7 @@ export default Vue.extend({
 
   data() {
     return {
-      step: 7,
+      step: 1,
       isLoadingGoPay: false,
 
       residenceShowCamera: false,
@@ -1038,7 +1038,7 @@ export default Vue.extend({
       formData.append('proofResidence', this.proofResidence);
       formData.append('medicalCertificate', this.medicalCertificate);
 
-      const registration = (await axios.post('http://localhost:3001/center/registration', formData)).data;
+      const registration = (await axios.post(`${process.env.VUE_APP_SPORTEMPLE_ENROLL_API}/center/registration`, formData)).data;
 
       const stripe = await loadStripe('pk_test_51IaJpyJBgPLSInDKWuAF12GVj5wlIGLypDG6HbN2XDWvlS5g2n9F2mIaZ0v1WB8RtPnYZYkhaY0ZdLq7vkeGgme300wELrLqus');
 

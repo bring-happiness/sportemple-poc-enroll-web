@@ -54,10 +54,12 @@ export default Vue.extend({
   }
 
   .fade-enter-active, .fade-leave-active {
-    transition: opacity .3s;
+    transition: all .3s ease;
   }
 
   .fade-enter, .fade-leave-to {
     opacity: 0;
+    transform: translateX(2em);
   }
+
 </style>

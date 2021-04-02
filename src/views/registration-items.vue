@@ -37,7 +37,7 @@
           >
             mdi-currency-eur
           </v-icon>
-          <span class="subtitle-1">150</span>
+          <span class="subtitle-1">158</span>
         </v-chip>
       </v-card-actions>
     </v-card>
